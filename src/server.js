@@ -7,8 +7,8 @@ const { Server } = require("socket.io");
 /**
  * Load environment variables from .env file.
  */
-const clientURLLocalhost = "http://localhost:5173/";
-const clientUrlDeploy = "https://proyecto-integrador-chi-ochre.vercel.app/";
+const clientURLLocalhost = "http://localhost:5173";
+const clientUrlDeploy = "https://proyecto-integrador-chi-ochre.vercel.app";
 
 const port = 8080;
 
@@ -19,6 +19,9 @@ const port = 8080;
 const io = new Server({
     cors: {
         origin: [clientURLLocalhost, clientUrlDeploy],
+        methods: ["GET", "POST"], // Explicitly specify allowed methods
+        allowedHeaders: ["my-custom-header"], // Specify allowed headers if needed
+        credentials: true // Allow cookies to be sent if needed
     },
 });
 
@@ -42,10 +45,11 @@ io.on("connection", (socket) => {
 
     /**
      * Handle a player's movement.
-     * Broadcast the transforms to other player.
+     * Broadcast the transforms to other players.
      */
     socket.on("player-moving", (transforms) => {
-        socket.broadcast.emit("player-moving", transforms);
+        //console.log('Player is moving', transforms);
+        socket.broadcast.emit("player-moving", {...transforms, playerId: socket.id});
     });
 
     /**
@@ -59,4 +63,3 @@ io.on("connection", (socket) => {
         );
     });
 });
-
