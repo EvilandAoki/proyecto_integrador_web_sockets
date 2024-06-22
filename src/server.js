@@ -56,6 +56,10 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("ball-moving", {...transforms, playerId: socket.id});
     });
 
+    socket.on("scoreBoard-change", (transforms) => {
+        socket.broadcast.emit("scoreBoard-change", {...transforms, playerId: socket.id});
+    });
+
     /**
      * Handle player disconnection.
      */
